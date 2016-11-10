@@ -8,11 +8,15 @@ public class Controller : MonoBehaviour
 {
 
     public static Controller c;
+    public float time;
 
     SerialPort stream = new SerialPort("COM3", 115200);
     private string receivedData = "EMPTY";
     //private string receivedData = "00000040";
 
+
+    // Buttons
+    //********************************
     private int Button1 = System.Convert.ToInt32("00000040", 16);
     private int Button2 = System.Convert.ToInt32("00000080", 16);
     private int Button3 = System.Convert.ToInt32("00000100", 16);
@@ -33,9 +37,24 @@ public class Controller : MonoBehaviour
     private float b4deadTime = 0f;
     private float b5deadTime = 0f;
     private float b6deadTime = 0f;
+    //********************************
+
+    // Sliders
+    //********************************
+    public float slider1;
+    private float olds1;
+    private float s1deadtime;
+    public float slider2;
+    private float s2deadtime;
+    public float knob1;
+    private float k1deadtime;
+    public float knob2;
+    private float k2deadtime;
 
     //put into other script:
     /*
+     * Controller C = new Controller();
+     * 
      * StartCoroutine(init());
      * 
      * 
@@ -60,8 +79,10 @@ public class Controller : MonoBehaviour
     void Update()
     {
 
+        // Buttons
+        //*********************************************
         /*
-         * 1: 60m   |
+         * 1: 60    |
          * 2: A0    |
          * 3: 120   |
          * 4: 220   |
@@ -71,7 +92,7 @@ public class Controller : MonoBehaviour
         stream.Write("1");
         receivedData = stream.ReadLine();
 
-        Debug.Log(receivedData);
+        //Debug.Log(receivedData);
 
         int receivedValue = System.Convert.ToInt32(receivedData, 16);
 
@@ -142,19 +163,64 @@ public class Controller : MonoBehaviour
         }
 
 
-       // b3pressed = (receivedValue & Button3) != 0;
+        // b3pressed = (receivedValue & Button3) != 0;
 
-        //b4pressed = (receivedValue & Button4) != 0;
+        // b4pressed = (receivedValue & Button4) != 0;
 
-       // b5pressed = (receivedValue & Button5) != 0;
+        // b5pressed = (receivedValue & Button5) != 0;
 
-        //b6pressed = (receivedValue & Button6) != 0;
+        // b6pressed = (receivedValue & Button6) != 0;
+
+        //*********************************************
+
+        // Sliders
+        //*********************************************
+        stream.Write("4");
+        receivedData = stream.ReadLine();
+        string[] Sliders = receivedData.Split(' ');
+        if (s1deadtime <= 0)
+        {
+            slider1 = System.Convert.ToInt32(Sliders[4], 16) / 4096f;
+            s1deadtime = time / 100;
+        }
+        else
+        {
+            s1deadtime -= Time.deltaTime;
+        }
+        if (s2deadtime <= 0)
+        {
+            slider2 = System.Convert.ToInt32(Sliders[3], 16) / 4096f;
+            s2deadtime = time / 100;
+        }
+        else
+        {
+            s2deadtime -= Time.deltaTime;
+        }
+        if (k1deadtime <= 0)
+        {
+            knob1 = System.Convert.ToInt32(Sliders[2], 16) / 4096f;
+            k1deadtime = time / 100;
+        }
+        else
+        {
+            k1deadtime -= Time.deltaTime;
+        }
+        if (k2deadtime <= 0)
+        {
+            knob2 = System.Convert.ToInt32(Sliders[1], 16) / 4096f;
+            k2deadtime = time / 100;
+        }
+        else
+        {
+            k2deadtime -= Time.deltaTime;
+        }
+        //*********************************************
     }
 
     void OnGui()
     {
-        //T1 ausgabe im spielscreen
-        //hex string & Button
+        // T1 Ausgabe im Spielscreen
+        // hex string & Button
         int receivedValue = System.Convert.ToInt32(receivedData, 16);
         //int buttonBitMask= System.Convert.ToInt32("00000040", 16);
 
