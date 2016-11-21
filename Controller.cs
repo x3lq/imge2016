@@ -15,6 +15,8 @@ public class Controller : MonoBehaviour
     //private string receivedData = "00000040";
 
 
+    public int MotorSpeed;
+
     // Buttons
     //********************************
     private int Button1 = System.Convert.ToInt32("00000040", 16);
@@ -53,7 +55,7 @@ public class Controller : MonoBehaviour
 
     //put into other script:
     /*
-     * Controller C = new Controller();
+     * Controller C;
      * 
      * StartCoroutine(init());
      * 
@@ -61,7 +63,7 @@ public class Controller : MonoBehaviour
      *     IEnumerator init()
     {
         yield return new WaitUntil(() => Controller.c != null);
-        controle = Controller.c;
+        C = Controller.c;
     }
      */
 
@@ -69,10 +71,14 @@ public class Controller : MonoBehaviour
     //open port
     void Start()
     {
-        c = this;
-       // c.b3pressed = true;
-        stream.Open();
-        Debug.Log("Serial Stream started");
+            c = this;
+            Debug.Log(stream.IsOpen);
+            if (!stream.IsOpen)
+            {
+                stream.Open();
+                Debug.Log("Serial Stream started");
+            }
+            Debug.Log(stream.IsOpen);
     }
 
     // Update is called once per frame
@@ -91,8 +97,6 @@ public class Controller : MonoBehaviour
          * */
         stream.Write("1");
         receivedData = stream.ReadLine();
-
-        //Debug.Log(receivedData);
 
         int receivedValue = System.Convert.ToInt32(receivedData, 16);
 
@@ -173,6 +177,7 @@ public class Controller : MonoBehaviour
 
         //*********************************************
 
+
         // Sliders
         //*********************************************
         stream.Write("4");
@@ -217,8 +222,42 @@ public class Controller : MonoBehaviour
         //*********************************************
     }
 
+    public void LED(int ID, int Mode)
+    {
+        string s = "l " + ID + " " + Mode + "\r\n";
+        stream.Write(s);
+        stream.ReadLine();
+    }
+
+    public void LEDOFF()
+    {
+        string s = "l " + 0 + " " + 0 + "\r\n";
+        stream.Write(s);
+        stream.ReadLine();
+        s = "l " + 1 + " " + 0 + "\r\n";
+        stream.Write(s);
+        stream.ReadLine();
+        s = "l " + 2 + " " + 0 + "\r\n";
+        stream.Write(s);
+        stream.ReadLine();
+        s = "l " + 3 + " " + 0 + "\r\n";
+        stream.Write(s);
+        stream.ReadLine();
+    }
+
+    public void setMotorSpeed(float Speed)
+    {
+        if (Mathf.Abs(MotorSpeed - Speed) >= 25 || Speed == 0)
+        {
+            stream.Write("m " + Speed + "\r\n");
+            stream.ReadLine();
+            MotorSpeed = (int)Speed;
+        }
+    }
+
     void OnGui()
     {
+        /*
         // T1 Ausgabe im Spielscreen
         // hex string & Button
         int receivedValue = System.Convert.ToInt32(receivedData, 16);
@@ -226,5 +265,7 @@ public class Controller : MonoBehaviour
 
         GUI.Label(new Rect(500, 10, 120, 20), receivedData);
         GUI.Label(new Rect(500, 30, 120, 20), "Button1: " + ((receivedValue & Button1) != 0));
+        */
     }
 }
+
