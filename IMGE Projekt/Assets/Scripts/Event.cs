@@ -12,7 +12,7 @@ public class Event : MonoBehaviour {
     void Start () {
         Length = 1;
         pressed = false;
-        RNG();
+        //RNG();
 	}
 	
 	// Update is called once per frame
@@ -30,6 +30,11 @@ public class Event : MonoBehaviour {
     {
         Art = Random.Range(0, 4);
         transform.position = new Vector3(-4 + 2 * Art, 10, 0);
+    }
+
+    public void Position(int Art)
+    {
+        transform.position = new Vector3(-4 + 2 * Art, 5, 0);
     }
 
 
