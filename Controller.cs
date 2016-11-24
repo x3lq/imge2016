@@ -53,6 +53,9 @@ public class Controller : MonoBehaviour
     public float knob2;
     private float k2deadtime;
 
+    // Axes
+    public float AccX, AccY, AccZ;
+
     //put into other script:
     /*
      * Controller C;
@@ -84,7 +87,13 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Buttons();
+        Sliders();
+        Accellerometer();
+    }
 
+    public void Buttons()
+    {
         // Buttons
         //*********************************************
         /*
@@ -176,10 +185,10 @@ public class Controller : MonoBehaviour
         // b6pressed = (receivedValue & Button6) != 0;
 
         //*********************************************
+    }
 
-
-        // Sliders
-        //*********************************************
+    public void Sliders()
+    {
         stream.Write("4");
         receivedData = stream.ReadLine();
         string[] Sliders = receivedData.Split(' ');
@@ -219,7 +228,6 @@ public class Controller : MonoBehaviour
         {
             k2deadtime -= Time.deltaTime;
         }
-        //*********************************************
     }
 
     public void LED(int ID, int Mode)
@@ -253,6 +261,24 @@ public class Controller : MonoBehaviour
             stream.ReadLine();
             MotorSpeed = (int)Speed;
         }
+    }
+
+    public void Accellerometer()
+    {
+        stream.Write("a");
+        receivedData = stream.ReadLine();
+
+        string[] Axes = receivedData.Split(' ');
+        AccX = convertSigned((System.Convert.ToInt32(Axes[1], 16)))/128f;
+        AccY = convertSigned((System.Convert.ToInt32(Axes[2], 16)))/128f;
+        AccZ = convertSigned((System.Convert.ToInt32(Axes[3], 16)))/128f;
+
+    }
+    
+    private int convertSigned(int input)
+    {
+        if(input > 127) { input -= 256; }
+        return input;
     }
 
     void OnGui()
