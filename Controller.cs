@@ -56,6 +56,13 @@ public class Controller : MonoBehaviour
     // Axes
     public float AccX, AccY, AccZ;
 
+    //Vector3 for gesture erkennung
+    private StreamProcessor sp;
+    private Vector3 gestureVector3;
+    private Gesture current_Gesture;
+    private GestureLibrary gestureLibrary;
+    public String detected_Gesture;
+
     //put into other script:
     /*
      * Controller C;
@@ -82,6 +89,10 @@ public class Controller : MonoBehaviour
                 Debug.Log("Serial Stream started");
             }
             Debug.Log(stream.IsOpen);
+
+            sp = new StreamProcessor();
+            gestureLibrary = new GestureLibrary();
+            load_Gestures();
     }
 
     // Update is called once per frame
@@ -90,6 +101,9 @@ public class Controller : MonoBehaviour
         Buttons();
         Sliders();
         Accellerometer();
+
+        gestrueDetection();
+
     }
 
     public void Buttons()
@@ -279,6 +293,43 @@ public class Controller : MonoBehaviour
     {
         if(input > 127) { input -= 256; }
         return input;
+    }
+
+    private void gestrueDetection()
+    {
+        gestureVector3 = new Vector3(AccX,AccY,AccZ);
+        sp.ProcessRawMeasurement(gestureVector3);
+
+        if (sp.GestureIsValid)
+        {
+           current_Gesture =  sp.Gesture;
+           detected_Gesture = gestureLibrary.Classify(current_Gesture);
+           Debug.Log(sp.Gesture.ToString());
+        }
+    }
+
+    private void load_Gestures()
+    {
+        //String path = Application.dataPath + "/Gestures/";
+        String path = Application.dataPath+ "\\Gestures\\gesture_";
+        
+        //Debug.Log(path);
+        gestureLibrary["up"]= new GestureModel();
+        gestureLibrary["up"].load(path + "High.xml");
+        gestureLibrary["right"] = new GestureModel();
+        gestureLibrary["right"].load(path + "Mid.xml");
+        gestureLibrary["left"] = new GestureModel();
+        gestureLibrary["left"].load(path + "Low.xml");
+
+        gestureLibrary["left"] = new GestureModel();
+        gestureLibrary["left"].load(path + "left.xml");
+
+        gestureLibrary["right"] = new GestureModel();
+        gestureLibrary["right"].load(path + "right.xml");
+
+        gestureLibrary["up"] = new GestureModel();
+        gestureLibrary["up"].load(path + "up.xml");
+
     }
 
     void OnGui()
