@@ -23,7 +23,7 @@ public class GameHandler : MonoBehaviour {
     private float CoolDown;
 
     // Gespeicherte Sequenz die beim nächsten Zug zu absolvieren ist
-    private List<string> Sequenz;
+    public static List<string> Sequenz;
     // Counter wo man sich gerade in der Sequenz befindet
     private int SequenzCounter;
 
