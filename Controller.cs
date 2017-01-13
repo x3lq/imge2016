@@ -56,12 +56,17 @@ public class Controller : MonoBehaviour
     // Axes
     public float AccX, AccY, AccZ;
 
-    //Vector3 for gesture erkennung
+    // Microphone
+    public float Volume;
+
+    //Vector3 for gesture erkennung     Für Gesture müssen die Scripts aus T6 implementiert werden
+    /*
     private StreamProcessor sp;
     private Vector3 gestureVector3;
     private Gesture current_Gesture;
     private GestureLibrary gestureLibrary;
     public String detected_Gesture;
+    */
 
     //put into other script:
     /*
@@ -88,11 +93,14 @@ public class Controller : MonoBehaviour
                 stream.Open();
                 Debug.Log("Serial Stream started");
             }
-            Debug.Log(stream.IsOpen);
+            Debug.Log("Stream is Open: " + stream.IsOpen);
 
+            // Gestures
+            /*
             sp = new StreamProcessor();
             gestureLibrary = new GestureLibrary();
             load_Gestures();
+            */
     }
 
     // Update is called once per frame
@@ -101,8 +109,9 @@ public class Controller : MonoBehaviour
         Buttons();
         Sliders();
         Accellerometer();
+        Mic();
 
-        gestrueDetection();
+        //gestureDetection();
 
     }
 
@@ -288,6 +297,13 @@ public class Controller : MonoBehaviour
         AccZ = convertSigned((System.Convert.ToInt32(Axes[3], 16)))/128f;
 
     }
+
+    public void Mic()
+    {
+        stream.Write("s");
+        receivedData = stream.ReadLine();
+        Volume = (float)(System.Convert.ToDouble(receivedData.Split(' ')[1]))/32768f;
+    }
     
     private int convertSigned(int input)
     {
@@ -295,7 +311,10 @@ public class Controller : MonoBehaviour
         return input;
     }
 
-    private void gestrueDetection()
+
+    // Gestures
+    /*
+    private void gestureDetection()
     {
         gestureVector3 = new Vector3(AccX,AccY,AccZ);
         sp.ProcessRawMeasurement(gestureVector3);
@@ -331,6 +350,7 @@ public class Controller : MonoBehaviour
         gestureLibrary["up"].load(path + "up.xml");
 
     }
+    */
 
     void OnGui()
     {
