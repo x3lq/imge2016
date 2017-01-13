@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 
 
-class ControllerElement
+public class ControllerElement
 {
+    public string Name;
+
     private string type;
     private int position = -1;
 
     public ControllerElement(string type)
     {
+        Name = "TEST";
         this.type = type;
     }
 
@@ -36,5 +39,10 @@ class ControllerElement
         ControllerElement cur = (ControllerElement) other;
 
         return type.Equals(cur.type) && position == cur.position;
+    }
+
+    public override string ToString()
+    {
+        return Name;
     }
 }

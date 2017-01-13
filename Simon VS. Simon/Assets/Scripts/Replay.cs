@@ -21,7 +21,7 @@ public class Replay : MonoBehaviour
     void OnReplay()
     {
 
-        foreach (string var in GameHandler.Sequenz)
+        foreach (string var in GameHandler.SequenzAlt)
         {
             switch (var)
             {
