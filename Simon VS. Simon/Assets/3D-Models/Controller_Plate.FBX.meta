@@ -1,0 +1,203 @@
+fileFormatVersion: 2
+guid: 84de46c028728154babb7ba9a1e02dee
+timeCreated: 1484410932
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: BasePlate
+    100002: Button_Base
+    100004: Button_Base001
+    100006: Button_Base002
+    100008: Button_Base003
+    100010: Button_Base004
+    100012: Button_Base005
+    100014: Button_Button
+    100016: Button_Button001
+    100018: Button_Button002
+    100020: Button_Button003
+    100022: Button_Button004
+    100024: Button_Button005
+    100026: //RootNode
+    100028: Drehknopf_base
+    100030: Drehknopf_base001
+    100032: Drehknopf_drehknopf
+    100034: Drehknopf_drehknopf001
+    100036: LED_002
+    100038: LED_003
+    100040: LED_004
+    100042: LED_01
+    100044: Slider_Base
+    100046: Slider_Base001
+    100048: Slider_Slider
+    100050: Slider_Slider001
+    400000: BasePlate
+    400002: Button_Base
+    400004: Button_Base001
+    400006: Button_Base002
+    400008: Button_Base003
+    400010: Button_Base004
+    400012: Button_Base005
+    400014: Button_Button
+    400016: Button_Button001
+    400018: Button_Button002
+    400020: Button_Button003
+    400022: Button_Button004
+    400024: Button_Button005
+    400026: //RootNode
+    400028: Drehknopf_base
+    400030: Drehknopf_base001
+    400032: Drehknopf_drehknopf
+    400034: Drehknopf_drehknopf001
+    400036: LED_002
+    400038: LED_003
+    400040: LED_004
+    400042: LED_01
+    400044: Slider_Base
+    400046: Slider_Base001
+    400048: Slider_Slider
+    400050: Slider_Slider001
+    2300000: BasePlate
+    2300002: Button_Base
+    2300004: Button_Base001
+    2300006: Button_Base002
+    2300008: Button_Base003
+    2300010: Button_Base004
+    2300012: Button_Base005
+    2300014: Button_Button
+    2300016: Button_Button001
+    2300018: Button_Button002
+    2300020: Button_Button003
+    2300022: Button_Button004
+    2300024: Button_Button005
+    2300026: Drehknopf_base
+    2300028: Drehknopf_base001
+    2300030: Drehknopf_drehknopf
+    2300032: Drehknopf_drehknopf001
+    2300034: LED_002
+    2300036: LED_003
+    2300038: LED_004
+    2300040: LED_01
+    2300042: Slider_Base
+    2300044: Slider_Base001
+    2300046: Slider_Slider
+    2300048: Slider_Slider001
+    3300000: BasePlate
+    3300002: Button_Base
+    3300004: Button_Base001
+    3300006: Button_Base002
+    3300008: Button_Base003
+    3300010: Button_Base004
+    3300012: Button_Base005
+    3300014: Button_Button
+    3300016: Button_Button001
+    3300018: Button_Button002
+    3300020: Button_Button003
+    3300022: Button_Button004
+    3300024: Button_Button005
+    3300026: Drehknopf_base
+    3300028: Drehknopf_base001
+    3300030: Drehknopf_drehknopf
+    3300032: Drehknopf_drehknopf001
+    3300034: LED_002
+    3300036: LED_003
+    3300038: LED_004
+    3300040: LED_01
+    3300042: Slider_Base
+    3300044: Slider_Base001
+    3300046: Slider_Slider
+    3300048: Slider_Slider001
+    4300000: BasePlate
+    4300002: Button_Base
+    4300004: Button_Button
+    4300006: Button_Base001
+    4300008: Button_Button001
+    4300010: Button_Base002
+    4300012: Button_Button002
+    4300014: Button_Button003
+    4300016: Button_Base003
+    4300018: Button_Button004
+    4300020: Button_Base004
+    4300022: Button_Button005
+    4300024: Button_Base005
+    4300026: Slider_Base
+    4300028: Slider_Slider
+    4300030: Slider_Slider001
+    4300032: Slider_Base001
+    4300034: Drehknopf_base
+    4300036: Drehknopf_drehknopf
+    4300038: Drehknopf_base001
+    4300040: LED_01
+    4300042: LED_002
+    4300044: LED_003
+    4300046: LED_004
+    4300048: Drehknopf_drehknopf001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

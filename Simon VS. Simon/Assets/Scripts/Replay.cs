@@ -5,17 +5,36 @@ using UnityEngine.Events;
 
 public class Replay : MonoBehaviour
 {
-    public UnityEvent Button_1_down;
+    public UnityEvent[] buttons;
+    public UnityEvent reset;
 
     public bool on;
+
+    public Color active, def;
+
+   /* void Start()
+    {
+        ColorChanger.DefaultColor = def;
+        ColorChanger.ActiveColor = active;
+        Debug.Log(def.ToString());
+        Debug.Log(active.ToString());
+    }*/
 
     void Update()
     {
         if (on)
         {
             on = false;
-            Button_1_down.Invoke();
+            foreach (UnityEvent button in buttons)
+            {
+                button.Invoke();
+            }
         }  
+    }
+
+    void Reset()
+    {
+        reset.Invoke();
     }
 
     void OnReplay()
@@ -25,8 +44,23 @@ public class Replay : MonoBehaviour
         {
             switch (var)
             {
-                case "A":
-                    Button_1_down.Invoke();
+                case "Buttton1":
+                    buttons[0].Invoke();
+                    break;
+                case "Buttton2":
+                    buttons[1].Invoke();
+                    break;
+                case "Buttton3":
+                    buttons[2].Invoke();
+                    break;
+                case "Buttton4":
+                    buttons[3].Invoke();
+                    break;
+                case "Buttton5":
+                    buttons[4].Invoke();
+                    break;
+                case "Buttton6":
+                    buttons[5].Invoke();
                     break;
 
             }
