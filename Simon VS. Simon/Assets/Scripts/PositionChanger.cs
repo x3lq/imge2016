@@ -5,6 +5,7 @@ using UnityEngine;
 public class PositionChanger : MonoBehaviour
 {
 
+    public float speed;
     private GameObject[] pos;
 	// Use this for initialization
 	void Start () {
@@ -18,20 +19,26 @@ public class PositionChanger : MonoBehaviour
 	}
 
 
-    void toPos0()
+    public void toPos0()
     {
-        Vector3.Lerp(transform.position, pos[0].transform.position, Time.deltaTime);
+        StartCoroutine(toPos(0));
     }
 
-    void toPos1()
+    public void toPos1()
     {
-        Vector3.Lerp(transform.position, pos[1].transform.position, Time.deltaTime);
-
+        StartCoroutine(toPos(1));
     }
 
-    void toPos2()
+    public void toPos2()
     {
-        Vector3.Lerp(transform.position, pos[2].transform.position, Time.deltaTime);
+        StartCoroutine(toPos(2));
+    }
 
+    IEnumerator toPos(int i)
+    {
+        
+        transform.position = pos[i].transform.position;
+        //Vector3.Lerp(transform.position, pos[i].transform.position, Time.deltaTime*speed);
+        yield return null;
     }
 }

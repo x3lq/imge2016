@@ -25,10 +25,11 @@ public class Replay : MonoBehaviour
         if (on)
         {
             on = false;
-            foreach (UnityEvent button in buttons)
+         /*   foreach (UnityEvent button in buttons)
             {
                 button.Invoke();
-            }
+            }*/
+            reset.Invoke();
         }  
     }
 
