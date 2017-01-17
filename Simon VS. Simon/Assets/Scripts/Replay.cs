@@ -17,9 +17,11 @@ public class Replay : MonoBehaviour
 
     public UnityEvent reset;
 
+    public float waitTime;
+
     public bool on;
 
-    public Color active, def;
+
 
    /* void Start()
     {
@@ -49,31 +51,46 @@ public class Replay : MonoBehaviour
 
     void OnReplay()
     {
+        StartCoroutine(replay());
+    }
 
-        foreach (string var in GameHandler.SequenzAlt)
+    IEnumerator replay()
+    {
+        foreach (ControllerElement var in GameHandler.Sequenz)
         {
-            switch (var)
+            if (var.Type.Equals("Button"))
             {
-                case "Buttton1":
-                    buttons[0].Invoke();
-                    break;
-                case "Buttton2":
-                    buttons[1].Invoke();
-                    break;
-                case "Buttton3":
-                    buttons[2].Invoke();
-                    break;
-                case "Buttton4":
-                    buttons[3].Invoke();
-                    break;
-                case "Buttton5":
-                    buttons[4].Invoke();
-                    break;
-                case "Buttton6":
-                    buttons[5].Invoke();
-                    break;
-
+                buttons[var.id].Invoke();
+            }
+            else if (var.Type.Equals("Slider"))
+            {
+                if (var.id == 0)
+                {
+                    slider01[var.Position].Invoke();
+                }
+                else
+                {
+                    slider02[var.Position].Invoke();
+                }
+            }
+            else if (var.Type.Equals("Drehknopf"))
+            {
+                if (var.id == 0)
+                {
+                    rotation01[var.Position].Invoke();
+                }
+                else
+                {
+                    rotation02[var.Position].Invoke();
+                }
+            }
+            else if (var.Type.Equals("LED"))
+            {
+                led[var.id].Invoke();
             }
         }
+        yield return new WaitForSeconds(waitTime);
     }
+
+
 }

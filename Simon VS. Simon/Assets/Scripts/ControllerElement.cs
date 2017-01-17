@@ -24,6 +24,14 @@ public class ControllerElement
         this.Pos = Position;
     }
 
+
+    public ControllerElement(string type, int Position, int id)
+    {
+        this.Typ = type;
+        this.Pos = Position;
+        this.ID = id;
+    }
+
     public string Type
     {
         get { return Typ; }
@@ -32,6 +40,11 @@ public class ControllerElement
     public int Position
     {
         get { return Pos; }
+    }
+
+    public int id
+    {
+        get { return ID; }
     }
 
     public override bool Equals(System.Object other)

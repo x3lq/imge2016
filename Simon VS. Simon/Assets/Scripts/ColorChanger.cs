@@ -5,31 +5,40 @@ using UnityEngine;
 public class ColorChanger : MonoBehaviour
 {
 
-    public Color DefaultColor;
-    public Color ActiveColor;
+    public Material defaultMat;
+    public Material activeMat;
 
     public static float onTime = 2.0f;
 
+    public bool test;
+
     void Update()
     {
-       // Debug.Log(DefaultColor.ToString());
-       // Debug.Log(ActiveColor.ToString());
+        if (test)
+        {
+            test = false;
+            toggleColorOnwithTimer();
+        }
     }
+
 
     public void toggleColorOnwithTimer()
     {
-        this.gameObject.GetComponent<Renderer>().material.color = ActiveColor;
+        toggleColorOn();
         StartCoroutine(turnOffColor());
     }
 
     public void toggleColorOff()
     {
-        this.gameObject.GetComponent<Renderer>().material.color = DefaultColor;
+       // this.gameObject.GetComponent<Renderer>().material.color = DefaultColor;
+        gameObject.GetComponent<Renderer>().material = defaultMat;
+
     }
 
     public void toggleColorOn()
     {
-        this.gameObject.GetComponent<Renderer>().material.color = ActiveColor;
+        //this.gameObject.GetComponent<Renderer>().material.color = ActiveColor;
+        gameObject.GetComponent<Renderer>().material = activeMat;
     }
 
 

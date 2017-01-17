@@ -7,9 +7,9 @@ public class PositionChanger : MonoBehaviour
 
     public float speed;
     public GameObject[] pos;
-   // public GameObject objectToSlide;
-	// Use this for initialization
-	/*void Start () {
+    // public GameObject objectToSlide;
+    // Use this for initialization
+    /*void Start () {
         pos = new GameObject[3];
 	    int i = 0;
 	    foreach (Transform child in transform)
@@ -18,26 +18,30 @@ public class PositionChanger : MonoBehaviour
 	    }
 		
 	}*/
+    public void reset()
+    {
+        StartCoroutine(toPos(0, false));
 
+    }
 
     public void toPos0()
     {
-        StartCoroutine(toPos(0));
+        StartCoroutine(toPos(0, true));
     }
 
     public void toPos1()
     {
-        StartCoroutine(toPos(1));
+        StartCoroutine(toPos(1, true));
     }
 
     public void toPos2()
     {
-        StartCoroutine(toPos(2));
+        StartCoroutine(toPos(2, true));
     }
 
-    IEnumerator toPos(int i)
+    IEnumerator toPos(int i, bool color)
     {
-        
+        if(color) gameObject.GetComponent<ColorChanger>().toggleColorOn();
        while ( Vector3.Distance(transform.position, pos[i].transform.position) > 0.05f)
         //while(objectToSlide.transform.position.y != pos[i].transform.position.y)
         {
@@ -49,6 +53,6 @@ public class PositionChanger : MonoBehaviour
 
         transform.position = pos[i].transform.position;
         //yield return null;
-
+        gameObject.GetComponent<ColorChanger>().toggleColorOff();
     }
 }
