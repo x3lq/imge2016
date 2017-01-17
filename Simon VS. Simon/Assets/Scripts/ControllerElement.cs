@@ -8,29 +8,30 @@ public class ControllerElement
 {
     public string Name;
 
-    private string type;
-    private int position = -1;
+    private string Typ;
+    private int ID;
+    private int Pos = -1;
 
-    public ControllerElement(string type)
+    public ControllerElement(string Typ)
     {
         Name = "TEST";
-        this.type = type;
+        this.Typ = Typ;
     }
 
-    public ControllerElement(string type, int position)
+    public ControllerElement(string type, int Position)
     {
-        this.type = type;
-        this.position = position;
+        this.Typ = type;
+        this.Pos = Position;
     }
 
     public string Type
     {
-        get { return type; }
+        get { return Typ; }
     }
 
     public int Position
     {
-        get { return position; }
+        get { return Pos; }
     }
 
     public override bool Equals(System.Object other)
@@ -38,7 +39,7 @@ public class ControllerElement
         if (other.GetType() != this.GetType()) return false;
         ControllerElement cur = (ControllerElement) other;
 
-        return type.Equals(cur.type) && position == cur.position;
+        return Typ.Equals(cur.Typ) && Pos == cur.Pos;
     }
 
     public override string ToString()
