@@ -16,7 +16,7 @@ public class ColorChanger : MonoBehaviour
        // Debug.Log(ActiveColor.ToString());
     }
 
-    public void toggleColorOn()
+    public void toggleColorOnwithTimer()
     {
         this.gameObject.GetComponent<Renderer>().material.color = ActiveColor;
         StartCoroutine(turnOffColor());
@@ -25,6 +25,11 @@ public class ColorChanger : MonoBehaviour
     public void toggleColorOff()
     {
         this.gameObject.GetComponent<Renderer>().material.color = DefaultColor;
+    }
+
+    public void toggleColorOn()
+    {
+        this.gameObject.GetComponent<Renderer>().material.color = ActiveColor;
     }
 
 

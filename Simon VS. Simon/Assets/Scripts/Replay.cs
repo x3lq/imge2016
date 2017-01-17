@@ -6,6 +6,15 @@ using UnityEngine.Events;
 public class Replay : MonoBehaviour
 {
     public UnityEvent[] buttons;
+
+    public UnityEvent[] slider01;
+    public UnityEvent[] slider02;
+
+    public UnityEvent[] rotation01;
+    public UnityEvent[] rotation02;
+
+    public UnityEvent[] led;
+
     public UnityEvent reset;
 
     public bool on;
