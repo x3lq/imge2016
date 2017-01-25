@@ -21,6 +21,8 @@ public class Replay : MonoBehaviour
 
     public bool on;
 
+    public static bool replaying;
+
 
 
    /* void Start()
@@ -44,18 +46,21 @@ public class Replay : MonoBehaviour
         }  
     }
 
-    void Reset()
+    public void Reset()
     {
         reset.Invoke();
     }
 
-    void OnReplay()
+    public void OnReplay()
     {
+        Debug.Log("OnReplay");
         StartCoroutine(replay());
     }
 
     IEnumerator replay()
     {
+        Debug.Log("Replay Of Sequenz...");
+
         foreach (ControllerElement var in GameHandler.Sequenz)
         {
             if (var.Type.Equals("Button"))
@@ -90,6 +95,10 @@ public class Replay : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(waitTime);
+
+        Debug.Log("Finished Replaying!");
+
+        replaying = false;
     }
 
 

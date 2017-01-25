@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class GameHandler : MonoBehaviour {
 
@@ -39,6 +40,7 @@ public class GameHandler : MonoBehaviour {
     private bool ActionDone;
     // Letzte Ausgeführte Aktion
     private string LastAction;
+    private int LastID;
 
     // CoolDown für die nächste Aktion
     private int CoolDownTime;
@@ -50,6 +52,9 @@ public class GameHandler : MonoBehaviour {
     public int SCount;
     // Counter wo man sich gerade in der Sequenz befindet
     private int SequenzCounter;
+
+    public UnityEvent ReplayEvent;
+    public UnityEvent ResetEvent;
 
 
     // Use this for initialization
@@ -73,6 +78,8 @@ public class GameHandler : MonoBehaviour {
         SequenzAlt = new List<string>();
         Sequenz = new List<ControllerElement>();
         SequenzCounter = 0;
+
+        ResetEvent.Invoke();
 
         StartCoroutine(Game());
     }
@@ -142,13 +149,13 @@ public class GameHandler : MonoBehaviour {
     // Input muss noch an Controller angepasst werden!
     private void InputListener()
     {
-        if (Input.GetKeyDown(KeyCode.A)) { LastAction = "A"; CoolDown = CoolDownTime; ActionDone = true; }
-        if (Input.GetKeyDown(KeyCode.S)) { LastAction = "S"; CoolDown = CoolDownTime; ActionDone = true; }
-        if (Input.GetKeyDown(KeyCode.D)) { LastAction = "D"; CoolDown = CoolDownTime; ActionDone = true; }
-        if (Input.GetKeyDown(KeyCode.F)) { LastAction = "F"; CoolDown = CoolDownTime; ActionDone = true; }
+        if (Input.GetKeyDown(KeyCode.A)) { LastAction = "A"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+        if (Input.GetKeyDown(KeyCode.S)) { LastAction = "S"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+        if (Input.GetKeyDown(KeyCode.D)) { LastAction = "D"; LastID = 2; CoolDown = CoolDownTime; ActionDone = true; }
+        if (Input.GetKeyDown(KeyCode.F)) { LastAction = "F"; LastID = 3; CoolDown = CoolDownTime; ActionDone = true; }
 
-        if (Input.GetKeyDown(KeyCode.J)) { LastAction = "J"; CoolDown = CoolDownTime; ActionDone = true; }
-        if (Input.GetKeyDown(KeyCode.K)) { LastAction = "K"; CoolDown = CoolDownTime; ActionDone = true; }
+        if (Input.GetKeyDown(KeyCode.J)) { LastAction = "J"; LastID = 4; CoolDown = CoolDownTime; ActionDone = true; }
+        if (Input.GetKeyDown(KeyCode.K)) { LastAction = "K"; LastID = 5; CoolDown = CoolDownTime; ActionDone = true; }
     }
 
     // Normal Game Mode
@@ -162,14 +169,12 @@ public class GameHandler : MonoBehaviour {
         {
             yield return new WaitUntil(() => ActionDone || Hate <= 0 || TimeCurrent > TimeToBeat);
 
-            Debug.Log("Continue");
-
             if (Mode == Modes.HateFest) { Hating = true; }
             if (Mode == Modes.TimeTrial || Mode == Modes.TotalDestruction) { measureTime = true; }
 
             ActionDone = false;
 
-            ControllerElement Last = new ControllerElement(LastAction);
+            ControllerElement Last = new ControllerElement(LastAction, LastID);
 
             if(Hate <= 0) { Last = new ControllerElement("HATEFEST"); }
             if(TimeCurrent > TimeToBeat) { Debug.Log("OVERTIME"); Last = new ControllerElement("TIMETRIAL"); }
@@ -220,7 +225,7 @@ public class GameHandler : MonoBehaviour {
             {
                 ActionDone = false;
 
-                Sequenz.Add(new ControllerElement(LastAction));
+                Sequenz.Add(new ControllerElement(LastAction, LastID));
 
                 SequenzCounter++;
 
@@ -240,12 +245,17 @@ public class GameHandler : MonoBehaviour {
             TimeCurrent = 0;
             measureTime = false;
         }
+        // Replay Der Kompletten Sequenz
+        Replay.replaying = true;
+        ReplayEvent.Invoke();
+
+        yield return new WaitUntil(() => !Replay.replaying);
+
+        ResetEvent.Invoke();
 
         // Ende der Sequenz
 
         yield return new WaitForSeconds(1);
-
-        Debug.Log("RESET");
 
         LastAction = "Begin";
         ActionDone = false;

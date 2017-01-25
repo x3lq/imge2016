@@ -14,13 +14,15 @@ public class ControllerElement
 
     public ControllerElement(string Typ)
     {
-        Name = "TEST";
+        Name = "Button";
         this.Typ = Typ;
+
+        this.Typ = "Button";
     }
 
     public ControllerElement(string type, int Position)
     {
-        this.Typ = type;
+        this.Typ = "Button";
         this.Pos = Position;
     }
 
