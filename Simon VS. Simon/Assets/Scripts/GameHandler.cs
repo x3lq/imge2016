@@ -6,7 +6,11 @@ using UnityEngine.Events;
 public class GameHandler : MonoBehaviour {
 
     Controller C;
-    bool k1, k2, s1, s2;
+    public bool k1, k2, s1, s2;
+    bool resettingController;
+
+    public GameObject Controller_Plate;
+    public Replay Replay;
 
     public enum Modes { Normal,                 // Normaler Modus: Jeder hat so viel Zeit wie er will
         TimeTrial,
@@ -42,7 +46,7 @@ public class GameHandler : MonoBehaviour {
     // Kontrolle ob schon etwas gemacht wurde
     private bool ActionDone;
     // Letzte Ausgeführte Aktion
-    private string LastAction;
+    public string LastAction;
     private int LastID;
     private int LastPos;
 
@@ -64,6 +68,11 @@ public class GameHandler : MonoBehaviour {
     // Use this for initialization
     void Start() {
         //Mode = Modes.Normal;
+
+        Replay = Controller_Plate.GetComponent<Replay>();
+
+        k1 = true;
+        k2 = true;
 
         StartCoroutine(ControllerInit());
 
@@ -88,7 +97,7 @@ public class GameHandler : MonoBehaviour {
 
         ResetEvent.Invoke();
 
-        StartCoroutine(Game());
+        StartCoroutine(WaitForControllerReset());
     }
 
     // Update is called once per frame
@@ -112,11 +121,8 @@ public class GameHandler : MonoBehaviour {
         GUI.color = Color.black;
         style.fontSize = 30;
 
-        // Action Output
-        if (SequenzCounter == 0 || CoolDown > 0)
-        {
-            GUI.Label(new Rect(Screen.width / 2 - (LastAction.Length * 15) / 2, Screen.height / 2, 100, 50), LastAction, style);
-        }
+        
+        GUI.Label(new Rect(Screen.width / 2 - (LastAction.Length * 15) / 2, Screen.height / 2, 100, 50), LastAction, style);
 
         // Active Player Visualization
         GUI.Label(new Rect(Screen.width / 2 - (ActivePlayer.Length * 15) / 2, Screen.height - 50, 100, 50), ActivePlayer, style);
@@ -156,53 +162,74 @@ public class GameHandler : MonoBehaviour {
     // Input muss noch an Controller angepasst werden!
     private void InputListener()
     {
-        if (C == null)
+        if (!resettingController && !Replay.replaying)
         {
-            if (Input.GetKeyDown(KeyCode.A)) { LastAction = "Button"; LastPos = -1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
-            if (Input.GetKeyDown(KeyCode.S)) { LastAction = "Button"; LastPos = -1; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+            if (C == null)
+            {
+                if (Input.GetKeyDown(KeyCode.A)) { LastAction = "Button"; LastPos = -1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+                if (Input.GetKeyDown(KeyCode.S)) { LastAction = "Button"; LastPos = -1; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
 
-            if (Input.GetKeyDown(KeyCode.D)) { LastAction = "Slider"; LastPos = 0; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
-            if (Input.GetKeyDown(KeyCode.F)) { LastAction = "Slider"; LastPos = 1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+                if (Input.GetKeyDown(KeyCode.D)) { LastAction = "Slider"; LastPos = 0; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+                if (Input.GetKeyDown(KeyCode.F)) { LastAction = "Slider"; LastPos = 1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
 
-            if (Input.GetKeyDown(KeyCode.J)) { LastAction = "Knob"; LastPos = 0; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
-            if (Input.GetKeyDown(KeyCode.K)) { LastAction = "Knob"; LastPos = 1; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
-        }
-        else
-        {
-            // Buttons
-            if (C.b1pressed) { LastAction = "Button"; LastPos = -1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
-            if (C.b2pressed) { LastAction = "Button"; LastPos = -1; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
-            if (C.b3pressed) { LastAction = "Button"; LastPos = -1; LastID = 2; CoolDown = CoolDownTime; ActionDone = true; }
-            if (C.b4pressed) { LastAction = "Button"; LastPos = -1; LastID = 3; CoolDown = CoolDownTime; ActionDone = true; }
-            if (C.b5pressed) { LastAction = "Button"; LastPos = -1; LastID = 4; CoolDown = CoolDownTime; ActionDone = true; }
-            if (C.b6pressed) { LastAction = "Button"; LastPos = -1; LastID = 5; CoolDown = CoolDownTime; ActionDone = true; }
+                if (Input.GetKeyDown(KeyCode.J)) { LastAction = "Knob"; LastPos = 0; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+                if (Input.GetKeyDown(KeyCode.K)) { LastAction = "Knob"; LastPos = 1; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+            }
+            else
+            {
+                // Buttons
+                if (C.b1pressed) { LastAction = "Button"; LastPos = -1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; Replay.buttons[0].Invoke(); }
+                if (C.b2pressed) { LastAction = "Button"; LastPos = -1; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; Replay.buttons[1].Invoke(); }
+                if (C.b3pressed) { LastAction = "Button"; LastPos = -1; LastID = 2; CoolDown = CoolDownTime; ActionDone = true; Replay.buttons[2].Invoke(); }
+                if (C.b4pressed) { LastAction = "Button"; LastPos = -1; LastID = 3; CoolDown = CoolDownTime; ActionDone = true; Replay.buttons[3].Invoke(); }
+                if (C.b5pressed) { LastAction = "Button"; LastPos = -1; LastID = 4; CoolDown = CoolDownTime; ActionDone = true; Replay.buttons[4].Invoke(); }
+                if (C.b6pressed) { LastAction = "Button"; LastPos = -1; LastID = 5; CoolDown = CoolDownTime; ActionDone = true; Replay.buttons[5].Invoke(); }
+                
+                // Knobs
+                if (!k1 && C.knob1 >= 0.75f) { k1 = true; LastPos = 0; LastAction = "Knob"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; Replay.rotation01[0].Invoke(); }
+                else
+                {
+                    if (k1 && C.knob1 <= 0.25f) { k1 = false; LastPos = 2; LastAction = "Knob"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; Replay.rotation01[2].Invoke(); }
+                }
 
-            // Knobs
-            if (!k1 && C.knob1 >= 0.9f) { k1 = true; LastPos = 1; LastAction = "Knob"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
-            if (k1 && C.knob1 <= 0.1f) { k1 = false; LastPos = 0; LastAction = "Knob"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+                if (!k2 && C.knob2 >= 0.75f) { k2 = true; LastPos = 0; LastAction = "Knob"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; Replay.rotation02[0].Invoke(); }
+                else
+                {
+                    if (k2 && C.knob2 <= 0.25f) { k2 = false; LastPos = 2; LastAction = "Knob"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; Replay.rotation02[2].Invoke(); }
+                }
 
-            if (!k2 && C.knob2 >= 0.9f) { k2 = true; LastPos = 1; LastAction = "Knob"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
-            if (k1 && C.knob1 <= 0.1f) { k2 = false; LastPos = 0; LastAction = "Knob"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+                // Sliders
+                if (!s1 && C.slider1 >= 0.75f) { s1 = true; LastPos = 2; LastAction = "Slider"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; Replay.slider01[2].Invoke(); }
+                else
+                {
+                    if (s1 && C.slider1 <= 0.25f) { s1 = false; LastPos = 0; LastAction = "Slider"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; Replay.slider01[0].Invoke(); }
+                }
 
-            // Sliders
-            if (!s1 && C.slider1 >= 0.9f) { s1 = true; LastPos = 1; LastAction = "Slider"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
-            if (s1 && C.slider1 <= 0.1f) { s1 = false; LastPos = 0; LastAction = "Slider"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
-
-            if (!s2 && C.slider2 >= 0.9f) { s2 = true; LastPos = 1; LastAction = "Slider"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
-            if (s1 && C.slider1 <= 0.1f) { s2 = false; LastPos = 0; LastAction = "Slider"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+                if (!s2 && C.slider2 >= 0.75f) { s2 = true; LastPos = 2; LastAction = "Slider"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; Replay.slider02[2].Invoke(); }
+                else
+                {
+                    if (s2 && C.slider2 <= 0.25f) { s2 = false; LastPos = 0; LastAction = "Slider"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; Replay.slider02[0].Invoke(); }
+                }
+            }
         }
     }
 
     // Normal Game Mode
     private IEnumerator Game()
     {
+        LastAction = "Begin";
+
         bool correct = true;
         SequenzCounter = 0;
+
+        Debug.Log("Sequenz Check...");
 
         // Sequenz wiederholen
         while (correct && SequenzCounter < Sequenz.Count)
         {
             yield return new WaitUntil(() => ActionDone || Hate <= 0 || TimeCurrent > TimeToBeat);
+
+            Debug.Log("Action has been done!");
 
             if (Mode == Modes.HateFest) { Hating = true; }
             if (Mode == Modes.TimeTrial || Mode == Modes.TotalDestruction) { measureTime = true; }
@@ -227,6 +254,8 @@ public class GameHandler : MonoBehaviour {
                 correct = WrongInput();
             }
         }
+
+        Debug.Log("Sequenz Check Finished!");
 
         // Hatefest Mode
         Hating = false;
@@ -261,7 +290,6 @@ public class GameHandler : MonoBehaviour {
                 ActionDone = false;
 
                 Sequenz.Add(new ControllerElement(LastAction, LastPos, LastID));
-                Debug.Log(Sequenz[Sequenz.Count - 1].ID);
 
                 SequenzCounter++;
 
@@ -281,8 +309,17 @@ public class GameHandler : MonoBehaviour {
             TimeCurrent = 0;
             measureTime = false;
         }
+
         // Replay Der Kompletten Sequenz
+        Debug.Log("Replay...");
+
         Replay.replaying = true;
+
+        yield return new WaitForSeconds(Replay.waitTime + 0.1f);
+
+        Replay.Reset();
+        yield return new WaitForSeconds(Replay.waitTime);
+
         ReplayEvent.Invoke();
 
         yield return new WaitUntil(() => !Replay.replaying);
@@ -293,14 +330,13 @@ public class GameHandler : MonoBehaviour {
 
         yield return new WaitForSeconds(1);
 
-        LastAction = "Begin";
         ActionDone = false;
 
         // Player Switch
         if (ActivePlayer == "Player 1") { ActivePlayer = "Player 2"; }
         else { ActivePlayer = "Player 1"; }
 
-        StartCoroutine(Game());
+        StartCoroutine(WaitForControllerReset());
     }
 
     private bool WrongInput()
@@ -326,5 +362,32 @@ public class GameHandler : MonoBehaviour {
     {
         yield return new WaitUntil(() => Controller.c != null);
         C = Controller.c;
+    }
+
+    IEnumerator WaitForControllerReset()
+    {
+        yield return new WaitUntil(() => C != null);
+
+        resettingController = true;
+
+        LastAction = "Reset Controller";
+
+        Debug.Log("Resetting Controller");
+
+        yield return new WaitUntil(() => C.slider1 <= 0.25f);
+        yield return new WaitUntil(() => C.slider2 <= 0.25f);
+        yield return new WaitUntil(() => C.knob1 >= 0.75f);
+        yield return new WaitUntil(() => C.knob2 >= 0.75f);
+
+        k1 = true;
+        k2 = true;
+        s1 = false;
+        s2 = false;
+
+        Debug.Log("Controller is ready!");
+        resettingController = false;
+        ActionDone = false;
+
+        StartCoroutine(Game());
     }
 }

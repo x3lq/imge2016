@@ -17,14 +17,14 @@ public class Replay : MonoBehaviour
 
     public UnityEvent reset;
 
-    public float waitTime;
+    public static float waitTime = 1.0f;
 
     public bool on;
 
     public static bool replaying;
 
 
-
+    
    /* void Start()
     {
         ColorChanger.DefaultColor = def;
@@ -81,6 +81,7 @@ public class Replay : MonoBehaviour
             }
             else if (var.Type.Equals("Knob"))
             {
+                Debug.Log(var.Position);
                 if (var.ID == 0)
                 {
                     rotation01[var.Position].Invoke();
@@ -94,13 +95,11 @@ public class Replay : MonoBehaviour
             {
                 led[var.ID].Invoke();
             }
-            yield return new WaitForSeconds(waitTime);
+            yield return new WaitForSeconds(waitTime + 0.1f);
         }
 
         Debug.Log("Finished Replaying!");
 
         replaying = false;
     }
-
-
 }

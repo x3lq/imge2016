@@ -135,7 +135,7 @@ public class Controller : MonoBehaviour
         if (b1deadTime <= 0)
         {
             b1pressed = (receivedValue & Button1) != 0;
-            b1deadTime = 0.5f;
+            b1deadTime = 0.2f;
         }
         else
         {
@@ -146,7 +146,7 @@ public class Controller : MonoBehaviour
         if (b2deadTime <= 0)
         {
             b2pressed = (receivedValue & Button2) != 0;
-            b2deadTime = 0.5f;
+            b2deadTime = 0.2f;
         }
         else
         {
@@ -157,7 +157,7 @@ public class Controller : MonoBehaviour
         if (b3deadTime <= 0)
         {
             b3pressed = (receivedValue & Button3) != 0;
-            b3deadTime = 0.5f;
+            b3deadTime = 0.2f;
         }
         else
         {
@@ -168,7 +168,7 @@ public class Controller : MonoBehaviour
         if (b4deadTime <= 0)
         {
             b4pressed = (receivedValue & Button4) != 0;
-            b4deadTime = 0.5f;
+            b4deadTime = 0.2f;
         }
         else
         {
@@ -179,7 +179,7 @@ public class Controller : MonoBehaviour
         if (b5deadTime <= 0)
         {
             b5pressed = (receivedValue & Button5) != 0;
-            b5deadTime = 0.5f;
+            b5deadTime = 0.2f;
         }
         else
         {
@@ -190,7 +190,7 @@ public class Controller : MonoBehaviour
         if (b6deadTime <= 0)
         {
             b6pressed = (receivedValue & Button6) != 0;
-            b6deadTime = 0.5f;
+            b6deadTime = 0.2f;
         }
         else
         {

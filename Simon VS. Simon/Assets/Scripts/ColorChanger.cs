@@ -8,7 +8,8 @@ public class ColorChanger : MonoBehaviour
     public Material defaultMat;
     public Material activeMat;
 
-    public static float onTime = 2.0f;
+    public static float onTime = 1.0f;
+    public bool on;
 
     public bool test;
 
@@ -19,13 +20,18 @@ public class ColorChanger : MonoBehaviour
             test = false;
             toggleColorOnwithTimer();
         }
+
     }
 
 
     public void toggleColorOnwithTimer()
     {
         Debug.Log("Color Switch ");
-        toggleColorOn();
+        if (on) { toggleColorOff(); StartCoroutine(turnOnColor(0.1f)); }
+        else
+        {
+            toggleColorOn();
+        }
         StartCoroutine(turnOffColor());
     }
 
@@ -39,14 +45,21 @@ public class ColorChanger : MonoBehaviour
     public void toggleColorOn()
     {
         //this.gameObject.GetComponent<Renderer>().material.color = ActiveColor;
+        on = true;
         gameObject.GetComponent<Renderer>().material = activeMat;
     }
 
-
+    IEnumerator turnOnColor(float timer)
+    {
+        on = true;
+        yield return new WaitForSeconds(timer);
+        toggleColorOn();
+    }
 
     IEnumerator turnOffColor()
     {
-        yield return new WaitForSeconds(onTime);
+        yield return new WaitForSeconds(Replay.waitTime);
+        on = false;
         toggleColorOff();
     }
 }
