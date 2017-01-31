@@ -24,6 +24,7 @@ public class ColorChanger : MonoBehaviour
 
     public void toggleColorOnwithTimer()
     {
+        Debug.Log("Color Switch ");
         toggleColorOn();
         StartCoroutine(turnOffColor());
     }

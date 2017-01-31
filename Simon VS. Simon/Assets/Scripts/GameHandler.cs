@@ -5,6 +5,9 @@ using UnityEngine.Events;
 
 public class GameHandler : MonoBehaviour {
 
+    Controller C;
+    bool k1, k2, s1, s2;
+
     public enum Modes { Normal,                 // Normaler Modus: Jeder hat so viel Zeit wie er will
         TimeTrial,
         HateFest,               // Hate Fest: Man hat für jede Eingabe nur eine bestimmte Zeit. Wenn man es bis dahin nicht geschafft hat sich zu erinnern hat man verloren!
@@ -41,6 +44,7 @@ public class GameHandler : MonoBehaviour {
     // Letzte Ausgeführte Aktion
     private string LastAction;
     private int LastID;
+    private int LastPos;
 
     // CoolDown für die nächste Aktion
     private int CoolDownTime;
@@ -61,6 +65,8 @@ public class GameHandler : MonoBehaviour {
     void Start() {
         //Mode = Modes.Normal;
 
+        StartCoroutine(ControllerInit());
+
         ExtraTime = 2;
 
         HateTime = 3;
@@ -78,6 +84,7 @@ public class GameHandler : MonoBehaviour {
         SequenzAlt = new List<string>();
         Sequenz = new List<ControllerElement>();
         SequenzCounter = 0;
+
 
         ResetEvent.Invoke();
 
@@ -149,13 +156,41 @@ public class GameHandler : MonoBehaviour {
     // Input muss noch an Controller angepasst werden!
     private void InputListener()
     {
-        if (Input.GetKeyDown(KeyCode.A)) { LastAction = "A"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
-        if (Input.GetKeyDown(KeyCode.S)) { LastAction = "S"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
-        if (Input.GetKeyDown(KeyCode.D)) { LastAction = "D"; LastID = 2; CoolDown = CoolDownTime; ActionDone = true; }
-        if (Input.GetKeyDown(KeyCode.F)) { LastAction = "F"; LastID = 3; CoolDown = CoolDownTime; ActionDone = true; }
+        if (C == null)
+        {
+            if (Input.GetKeyDown(KeyCode.A)) { LastAction = "Button"; LastPos = -1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+            if (Input.GetKeyDown(KeyCode.S)) { LastAction = "Button"; LastPos = -1; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
 
-        if (Input.GetKeyDown(KeyCode.J)) { LastAction = "J"; LastID = 4; CoolDown = CoolDownTime; ActionDone = true; }
-        if (Input.GetKeyDown(KeyCode.K)) { LastAction = "K"; LastID = 5; CoolDown = CoolDownTime; ActionDone = true; }
+            if (Input.GetKeyDown(KeyCode.D)) { LastAction = "Slider"; LastPos = 0; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+            if (Input.GetKeyDown(KeyCode.F)) { LastAction = "Slider"; LastPos = 1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+
+            if (Input.GetKeyDown(KeyCode.J)) { LastAction = "Knob"; LastPos = 0; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+            if (Input.GetKeyDown(KeyCode.K)) { LastAction = "Knob"; LastPos = 1; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+        }
+        else
+        {
+            // Buttons
+            if (C.b1pressed) { LastAction = "Button"; LastPos = -1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+            if (C.b2pressed) { LastAction = "Button"; LastPos = -1; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+            if (C.b3pressed) { LastAction = "Button"; LastPos = -1; LastID = 2; CoolDown = CoolDownTime; ActionDone = true; }
+            if (C.b4pressed) { LastAction = "Button"; LastPos = -1; LastID = 3; CoolDown = CoolDownTime; ActionDone = true; }
+            if (C.b5pressed) { LastAction = "Button"; LastPos = -1; LastID = 4; CoolDown = CoolDownTime; ActionDone = true; }
+            if (C.b6pressed) { LastAction = "Button"; LastPos = -1; LastID = 5; CoolDown = CoolDownTime; ActionDone = true; }
+
+            // Knobs
+            if (!k1 && C.knob1 >= 0.9f) { k1 = true; LastPos = 1; LastAction = "Knob"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+            if (k1 && C.knob1 <= 0.1f) { k1 = false; LastPos = 0; LastAction = "Knob"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+
+            if (!k2 && C.knob2 >= 0.9f) { k2 = true; LastPos = 1; LastAction = "Knob"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+            if (k1 && C.knob1 <= 0.1f) { k2 = false; LastPos = 0; LastAction = "Knob"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+
+            // Sliders
+            if (!s1 && C.slider1 >= 0.9f) { s1 = true; LastPos = 1; LastAction = "Slider"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+            if (s1 && C.slider1 <= 0.1f) { s1 = false; LastPos = 0; LastAction = "Slider"; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
+
+            if (!s2 && C.slider2 >= 0.9f) { s2 = true; LastPos = 1; LastAction = "Slider"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+            if (s1 && C.slider1 <= 0.1f) { s2 = false; LastPos = 0; LastAction = "Slider"; LastID = 1; CoolDown = CoolDownTime; ActionDone = true; }
+        }
     }
 
     // Normal Game Mode
@@ -173,8 +208,8 @@ public class GameHandler : MonoBehaviour {
             if (Mode == Modes.TimeTrial || Mode == Modes.TotalDestruction) { measureTime = true; }
 
             ActionDone = false;
-
-            ControllerElement Last = new ControllerElement(LastAction, LastID);
+            
+            ControllerElement Last = new ControllerElement(LastAction, LastPos, LastID);
 
             if(Hate <= 0) { Last = new ControllerElement("HATEFEST"); }
             if(TimeCurrent > TimeToBeat) { Debug.Log("OVERTIME"); Last = new ControllerElement("TIMETRIAL"); }
@@ -225,7 +260,8 @@ public class GameHandler : MonoBehaviour {
             {
                 ActionDone = false;
 
-                Sequenz.Add(new ControllerElement(LastAction, LastID));
+                Sequenz.Add(new ControllerElement(LastAction, LastPos, LastID));
+                Debug.Log(Sequenz[Sequenz.Count - 1].ID);
 
                 SequenzCounter++;
 
@@ -278,5 +314,17 @@ public class GameHandler : MonoBehaviour {
         Sequenz = new List<ControllerElement>();
 
         return false;
+    }
+
+    public static void log(string logMessage)
+    {
+        Debug.Log(logMessage);
+    }
+
+    
+    IEnumerator ControllerInit()
+    {
+        yield return new WaitUntil(() => Controller.c != null);
+        C = Controller.c;
     }
 }

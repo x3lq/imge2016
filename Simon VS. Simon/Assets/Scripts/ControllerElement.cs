@@ -9,7 +9,7 @@ public class ControllerElement
     public string Name;
 
     private string Typ;
-    private int ID;
+    public int ID;
     private int Pos = -1;
 
     public ControllerElement(string Typ)
@@ -54,7 +54,10 @@ public class ControllerElement
         if (other.GetType() != this.GetType()) return false;
         ControllerElement cur = (ControllerElement) other;
 
-        return Typ.Equals(cur.Typ) && Pos == cur.Pos;
+        GameHandler.log("Other: " + cur.Typ + " " + cur.Pos + " " + cur.ID);
+        GameHandler.log("This: " + Typ + " " + Pos + " " + ID);
+
+        return Typ.Equals(cur.Typ) && Pos == cur.Pos && ID == cur.ID;
     }
 
     public override string ToString()
