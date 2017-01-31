@@ -37,9 +37,8 @@ public class ColorChanger : MonoBehaviour
 
     public void toggleColorOff()
     {
-       // this.gameObject.GetComponent<Renderer>().material.color = DefaultColor;
+        // this.gameObject.GetComponent<Renderer>().material.color = DefaultColor;
         gameObject.GetComponent<Renderer>().material = defaultMat;
-
     }
 
     public void toggleColorOn()

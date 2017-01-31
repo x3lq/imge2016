@@ -6,13 +6,12 @@ public class RotationChanger : MonoBehaviour
 {
 
     public GameObject[] pos;
-    public float rotTime;
     private float timer;
     public float speed;
 
     void Start()
     {
-        timer = rotTime;
+        timer = Replay.waitTime;
     }
 
     public void reset()
@@ -44,7 +43,7 @@ public class RotationChanger : MonoBehaviour
             timer -= Time.deltaTime;
             yield return null;
         }
-        timer = rotTime;
+        timer = Replay.waitTime;
         transform.rotation = pos[i].transform.rotation;
         gameObject.GetComponent<ColorChanger>().toggleColorOff();
     }
