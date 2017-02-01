@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class GameHandler : MonoBehaviour {
 
+    Coroutine GameCo;
+    Coroutine ResetCo;
+
     Controller C;
     public bool k1, k2, s1, s2;
     public bool resettingController;
@@ -99,7 +102,7 @@ public class GameHandler : MonoBehaviour {
 
         ResetEvent.Invoke();
 
-        StartCoroutine(WaitForControllerReset());
+        ResetCo = StartCoroutine(WaitForControllerReset());
     }
 
     // Update is called once per frame
@@ -159,7 +162,7 @@ public class GameHandler : MonoBehaviour {
         }
         if (Mode == Modes.HateFest)
         {
-            GUI.Label(new Rect(Screen.width - 80, Screen.height / 2, 100, 50), Hate.ToString(), style);
+            GUI.Label(new Rect(Screen.width - 80, Screen.height / 3, 100, 50), (((float)((int)(Hate*100)))/100).ToString(), style);
         }
     }
     
@@ -371,7 +374,7 @@ public class GameHandler : MonoBehaviour {
         if (ActivePlayer == "Player 1") { ActivePlayer = "Player 2"; }
         else { ActivePlayer = "Player 1"; }
 
-        StartCoroutine(WaitForControllerReset());
+        ResetCo = StartCoroutine(WaitForControllerReset());
     }
     
     private IEnumerator WrongInput()
@@ -388,7 +391,9 @@ public class GameHandler : MonoBehaviour {
 
         Mid = true;
         AnzeigeMid = ActivePlayer + " f*cked up!";
-        
+
+        StopCoroutine(GameCo);
+        StopCoroutine(ResetCo);
         yield return new WaitForSeconds(5);
 
         SceneManager.LoadScene(0);
@@ -434,6 +439,6 @@ public class GameHandler : MonoBehaviour {
         resettingController = false;
         ActionDone = false;
 
-        StartCoroutine(Game());
+        GameCo = StartCoroutine(Game());
     }
 }

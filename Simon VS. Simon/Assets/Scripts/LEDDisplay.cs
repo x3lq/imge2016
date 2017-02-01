@@ -7,21 +7,12 @@ public class LEDDisplay : MonoBehaviour
     public bool on, off;
     public Controller c;
     public GameHandler gameHandler;
-    public ColorChanger[] LedColorChangers;
     public GameObject[] led;
 
     
 
 
-    void Start()
-    {
-        int i = 0;
-        foreach (GameObject tmp in led)
-        {
-            LedColorChangers[i] = tmp.GetComponent<ColorChanger>();
-            i++;
-        }    
-    }
+
 
 
     
