@@ -8,6 +8,7 @@ public class Menu : MonoBehaviour {
 
     public GameObject Play, Options, Quit;  // Main Menu
     public GameObject Standard, TimeTrial, Hatefest;
+    public GameObject Replay, MainMenu;
 
 	// Use this for initialization
 	void Start () {
@@ -27,6 +28,7 @@ public class Menu : MonoBehaviour {
         Standard.SetActive(true);
         TimeTrial.SetActive(true);
         Hatefest.SetActive(true);
+        MainMenu.SetActive(true);
     }
 
     public void quit()
@@ -35,6 +37,15 @@ public class Menu : MonoBehaviour {
         Application.Quit();
         if (EditorApplication.isPlaying) { EditorApplication.isPlaying = false; }
         Debug.Log("Still there?");
+    }
+
+    public void options()
+    {
+        Play.SetActive(false);
+        Options.SetActive(false);
+        Quit.SetActive(false);
+        Replay.SetActive(true);
+        MainMenu.SetActive(true);
     }
 
     public void standard()
@@ -51,5 +62,17 @@ public class Menu : MonoBehaviour {
     {
         global::Options.GameMode = 2;
         SceneManager.LoadScene(1);
+    }
+
+    public void mainMenu()
+    {
+        Replay.SetActive(false);
+        Standard.SetActive(false);
+        TimeTrial.SetActive(false);
+        Hatefest.SetActive(false);
+        MainMenu.SetActive(false);
+        Play.SetActive(true);
+        Options.SetActive(true);
+        Quit.SetActive(true);
     }
 }

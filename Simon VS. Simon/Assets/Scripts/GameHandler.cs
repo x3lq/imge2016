@@ -75,6 +75,8 @@ public class GameHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        Debug.Log(Options.ShowReplay);
+
         Mode = (Modes)Options.GameMode;
 
         Replay = Controller_Plate.GetComponent<Replay>();
@@ -170,7 +172,7 @@ public class GameHandler : MonoBehaviour {
     private void InputListener()
     {
         // Exit
-        if (Input.GetKeyDown(KeyCode.Escape)) { C.CloseStream(); C.LEDOFF(); SceneManager.LoadScene(0); }
+        if (Input.GetKeyDown(KeyCode.Escape)) { C.LEDOFF(); C.CloseStream(); SceneManager.LoadScene(0); }
 
         // Game Input
         if (!resettingController && !Replay.replaying)
@@ -347,27 +349,35 @@ public class GameHandler : MonoBehaviour {
 
 
         // Replay Der Kompletten Sequenz
-        Debug.Log("Replay...");
+        if (Options.ShowReplay)
+        {
+            Debug.Log("Replay...");
 
-        yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(1);
 
-        Mid = true;
-        AnzeigeMid = "Replay";
+            Mid = true;
+            AnzeigeMid = "Replay";
 
-        Replay.replaying = true;
+            Replay.replaying = true;
 
-        yield return new WaitForSeconds(Replay.waitTime + 0.1f);
+            yield return new WaitForSeconds(Replay.waitTime + 0.1f);
 
-        Replay.Reset();
-        yield return new WaitForSeconds(Replay.waitTime);
+            Replay.Reset();
+            yield return new WaitForSeconds(Replay.waitTime);
 
-        ReplayEvent.Invoke();
+            ReplayEvent.Invoke();
 
-        yield return new WaitUntil(() => !Replay.replaying);
+            yield return new WaitUntil(() => !Replay.replaying);
 
-        ResetEvent.Invoke();
+            ResetEvent.Invoke();
 
-        Mid = false;
+            Mid = false;
+        }
+        else
+        {
+            yield return new WaitForSeconds(1);
+            ResetEvent.Invoke();
+        }
 
 
         // Ende des Replays

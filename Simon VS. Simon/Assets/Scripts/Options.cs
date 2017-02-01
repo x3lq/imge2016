@@ -5,7 +5,7 @@ using UnityEngine;
 public class Options : MonoBehaviour {
 
     public static int GameMode;
-    public static bool ReplaySequenz;
+    public static bool ShowReplay;
 
 	// Use this for initialization
 	void Start () {
@@ -16,4 +16,6 @@ public class Options : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void showReplay(bool wert) { ShowReplay = wert; Debug.Log(ShowReplay); }
 }
