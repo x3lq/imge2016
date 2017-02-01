@@ -51,6 +51,7 @@ public class LEDDisplay : MonoBehaviour
 
     public void setLED()
     {
+        Debug.Log("LED");
         int[] on = calculateNumber();
 
         int i = 0;

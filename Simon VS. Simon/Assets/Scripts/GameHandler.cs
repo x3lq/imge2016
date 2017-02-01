@@ -70,6 +70,7 @@ public class GameHandler : MonoBehaviour {
 
     public UnityEvent ReplayEvent;
     public UnityEvent ResetEvent;
+    public UnityEvent LEDEvent;
 
 
     // Use this for initialization
@@ -98,7 +99,6 @@ public class GameHandler : MonoBehaviour {
         SequenzAlt = new List<string>();
         Sequenz = new List<ControllerElement>();
         SequenzCounter = 0;
-
 
         ResetEvent.Invoke();
 
@@ -170,7 +170,7 @@ public class GameHandler : MonoBehaviour {
     private void InputListener()
     {
         // Exit
-        if (Input.GetKeyDown(KeyCode.Escape)) { C.CloseStream(); SceneManager.LoadScene(0); }
+        if (Input.GetKeyDown(KeyCode.Escape)) { C.CloseStream(); C.LEDOFF(); SceneManager.LoadScene(0); }
 
         // Game Input
         if (!resettingController && !Replay.replaying)
@@ -320,6 +320,11 @@ public class GameHandler : MonoBehaviour {
                 SequenzCounter++;
 
                 Debug.Log("Added: " + LastAction);
+
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
+
+                LEDEvent.Invoke();
             }
             else
             {
@@ -408,6 +413,7 @@ public class GameHandler : MonoBehaviour {
     {
         yield return new WaitUntil(() => Controller.c != null);
         C = Controller.c;
+        C.LEDOFF();
     }
 
     IEnumerator WaitForControllerReset()
