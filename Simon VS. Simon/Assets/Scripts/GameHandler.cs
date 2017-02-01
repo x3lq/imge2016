@@ -411,7 +411,35 @@ public class GameHandler : MonoBehaviour {
         StopCoroutine(ResetCo);
         yield return new WaitForSeconds(5);
 
-        SceneManager.LoadScene(0);
+        if (P1Score == 3)
+        {
+            Mid = true;
+            AnzeigeMid = "Player 1 Has Won!";
+
+            yield return new WaitForSeconds(5);
+
+            C.LEDOFF();
+            C.CloseStream();
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            if (P2Score == 3)
+            {
+                Mid = true;
+                AnzeigeMid = "Player 2 Has Won!";
+
+                yield return new WaitForSeconds(5);
+
+                C.LEDOFF();
+                C.CloseStream();
+                SceneManager.LoadScene(0);
+            }
+            else
+            {
+                StartCoroutine(WaitForControllerReset());
+            }
+        }
     }
 
     public static void log(string logMessage)

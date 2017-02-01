@@ -61,6 +61,10 @@ public class LEDDisplay : MonoBehaviour
             {
                 tmp.GetComponent<ColorChanger>().toggleColorOn();
             }
+            else
+            {
+                tmp.GetComponent<ColorChanger>().toggleColorOff();
+            }
             c.LED(i, on[i]);
             i++;
             
