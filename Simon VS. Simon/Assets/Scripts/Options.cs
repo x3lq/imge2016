@@ -5,6 +5,7 @@ using UnityEngine;
 public class Options : MonoBehaviour {
 
     public static int GameMode;
+    public static bool ReplaySequenz;
 
 	// Use this for initialization
 	void Start () {

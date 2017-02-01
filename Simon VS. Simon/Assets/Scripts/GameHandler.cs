@@ -262,7 +262,8 @@ public class GameHandler : MonoBehaviour {
             }
             else
             {
-                correct = WrongInput();
+                StartCoroutine(WrongInput());
+                correct = false;
             }
         }
 
@@ -320,7 +321,7 @@ public class GameHandler : MonoBehaviour {
             else
             {
                 Debug.Log("Time is Over!");
-                WrongInput();
+                StartCoroutine(WrongInput());
             }
             Mid = false;
         }
@@ -373,7 +374,7 @@ public class GameHandler : MonoBehaviour {
         StartCoroutine(WaitForControllerReset());
     }
     
-    private bool WrongInput()
+    private IEnumerator WrongInput()
     {
         // Falsche Eingabe
         Debug.Log("Wrong!");
@@ -385,7 +386,12 @@ public class GameHandler : MonoBehaviour {
         SequenzCounter = 0;
         Sequenz = new List<ControllerElement>();
 
-        return false;
+        Mid = true;
+        AnzeigeMid = ActivePlayer + " f*cked up!";
+        
+        yield return new WaitForSeconds(5);
+
+        SceneManager.LoadScene(0);
     }
 
     public static void log(string logMessage)
