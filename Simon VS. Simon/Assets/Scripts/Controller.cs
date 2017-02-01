@@ -90,7 +90,7 @@ public class Controller : MonoBehaviour
     void Start()
     {
             c = this;
-            Debug.Log(stream.IsOpen);
+            //Debug.Log(stream.IsOpen);
             if (!stream.IsOpen)
             {
                 stream.Open();

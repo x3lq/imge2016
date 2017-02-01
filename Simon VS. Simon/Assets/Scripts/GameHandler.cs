@@ -75,7 +75,7 @@ public class GameHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        Debug.Log(Options.ShowReplay);
+        //Debug.Log(Options.ShowReplay);
 
         Mode = (Modes)Options.GameMode;
 
@@ -236,7 +236,7 @@ public class GameHandler : MonoBehaviour {
         SequenzCounter = 0;
 
         
-        Debug.Log("Sequenz Check...");
+        //Debug.Log("Sequenz Check...");
                
         // Sequenz wiederholen
         while (correct && SequenzCounter < Sequenz.Count)
@@ -245,7 +245,7 @@ public class GameHandler : MonoBehaviour {
 
             Mid = false;
 
-            Debug.Log("Action has been done!");
+            //Debug.Log("Action has been done!");
 
             if (Mode == Modes.HateFest) { Hating = true; }
             if (Mode == Modes.TimeTrial || Mode == Modes.TotalDestruction) { measureTime = true; }
@@ -255,14 +255,14 @@ public class GameHandler : MonoBehaviour {
             ControllerElement Last = new ControllerElement(LastAction, LastPos, LastID);
 
             if(Hate <= 0) { Last = new ControllerElement("HATEFEST"); }
-            if(TimeCurrent > TimeToBeat) { Debug.Log("OVERTIME"); Last = new ControllerElement("TIMETRIAL"); }
+            if(TimeCurrent > TimeToBeat) {/* Debug.Log("OVERTIME");*/ Last = new ControllerElement("TIMETRIAL"); }
 
             if (Sequenz[SequenzCounter].Equals(Last))
             {
                 // Korrekte Eingabe
                 Hate = HateTime;
 
-                Debug.Log("Correct!");
+                //Debug.Log("Correct!");
                 SequenzCounter++;
             }
             else
@@ -272,7 +272,7 @@ public class GameHandler : MonoBehaviour {
             }
         }
 
-        Debug.Log("Sequenz Check Finished!");
+        //Debug.Log("Sequenz Check Finished!");
         StartCoroutine(C.Vibrate(1, 0.1f, 0, 500));
 
 
@@ -285,7 +285,7 @@ public class GameHandler : MonoBehaviour {
         // TimeTrial Mode
         if (Mode == Modes.TimeTrial)
         {
-            Debug.Log("Measured Time...");
+            //Debug.Log("Measured Time...");
             if (correct)
             {
                 TimeToBeat = TimeCurrent + ExtraTime;
@@ -321,7 +321,7 @@ public class GameHandler : MonoBehaviour {
 
                 SequenzCounter++;
 
-                Debug.Log("Added: " + LastAction);
+                //Debug.Log("Added: " + LastAction);
 
                 yield return new WaitForEndOfFrame();
                 yield return new WaitForEndOfFrame();
@@ -330,7 +330,7 @@ public class GameHandler : MonoBehaviour {
             }
             else
             {
-                Debug.Log("Time is Over!");
+                //Debug.Log("Time is Over!");
                 StartCoroutine(WrongInput());
             }
             Mid = false;
@@ -340,7 +340,7 @@ public class GameHandler : MonoBehaviour {
         // Total Destruction
         if (Mode == Modes.TotalDestruction)
         {
-            Debug.Log("Measured Time...");
+            //Debug.Log("Measured Time...");
             TimeToBeat = TDTime;
             TimeCurrent = 0;
             measureTime = false;
@@ -351,7 +351,7 @@ public class GameHandler : MonoBehaviour {
         // Replay Der Kompletten Sequenz
         if (Options.ShowReplay)
         {
-            Debug.Log("Replay...");
+            //Debug.Log("Replay...");
 
             yield return new WaitForSeconds(1);
 
@@ -395,7 +395,7 @@ public class GameHandler : MonoBehaviour {
     private IEnumerator WrongInput()
     {
         // Falsche Eingabe
-        Debug.Log("Wrong!");
+        //Debug.Log("Wrong!");
         StartCoroutine(C.Vibrate(1, 0.5f, 0, 900));
 
         if (ActivePlayer == "Player 1") { P2Score++; P1Health -= Sequenz.Count - SequenzCounter; }
@@ -444,7 +444,7 @@ public class GameHandler : MonoBehaviour {
 
     public static void log(string logMessage)
     {
-        Debug.Log(logMessage);
+        //Debug.Log(logMessage);
     }
     
     IEnumerator ControllerInit()
@@ -463,7 +463,7 @@ public class GameHandler : MonoBehaviour {
         Mid = true;
         AnzeigeMid = "Reset Controller";
 
-        Debug.Log("Resetting Controller");
+        //Debug.Log("Resetting Controller");
 
         yield return new WaitUntil(() => C.slider1 <= 0.25f && C.slider2 <= 0.25f && C.knob1 >= 0.75f && C.knob2 >= 0.75f);
         //yield return new WaitUntil(() => C.slider2 <= 0.25f);
@@ -479,7 +479,7 @@ public class GameHandler : MonoBehaviour {
 
         Mid = false;
 
-        Debug.Log("Controller is ready!");
+        //Debug.Log("Controller is ready!");
         resettingController = false;
         ActionDone = false;
 

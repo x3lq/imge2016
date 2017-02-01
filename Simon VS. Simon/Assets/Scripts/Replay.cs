@@ -53,19 +53,19 @@ public class Replay : MonoBehaviour
 
     public void OnReplay()
     {
-        Debug.Log("OnReplay");
+        //Debug.Log("OnReplay");
         StartCoroutine(replay());
     }
 
     IEnumerator replay()
     {
-        Debug.Log("Replay Of Sequenz: " + GameHandler.Sequenz.Count);
+        //Debug.Log("Replay Of Sequenz: " + GameHandler.Sequenz.Count);
 
         foreach (ControllerElement var in GameHandler.Sequenz)
         {
             if (var.Type.Equals("Button"))
             {
-                Debug.Log("ID: " + var.ID);
+                //Debug.Log("ID: " + var.ID);
                 buttons[var.ID].Invoke();
             }
             else if (var.Type.Equals("Slider"))
@@ -81,7 +81,7 @@ public class Replay : MonoBehaviour
             }
             else if (var.Type.Equals("Knob"))
             {
-                Debug.Log(var.Position);
+                //Debug.Log(var.Position);
                 if (var.ID == 0)
                 {
                     rotation01[var.Position].Invoke();
@@ -98,7 +98,7 @@ public class Replay : MonoBehaviour
             yield return new WaitForSeconds(waitTime + 0.1f);
         }
 
-        Debug.Log("Finished Replaying!");
+        //Debug.Log("Finished Replaying!");
 
         replaying = false;
     }
