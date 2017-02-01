@@ -8,7 +8,10 @@ public class GameHandler : MonoBehaviour {
 
     Controller C;
     public bool k1, k2, s1, s2;
-    bool resettingController;
+    public bool resettingController;
+
+    public string AnzeigeMid;
+    public bool Mid;
 
     public GameObject Controller_Plate;
     public Replay Replay;
@@ -85,8 +88,6 @@ public class GameHandler : MonoBehaviour {
         ActivePlayer = "Player 1";
         P1Health = P2Health = 100;
 
-        LastAction = "Begin";
-
         CoolDownTime = 1;
 
         CoolDown = 0;
@@ -122,8 +123,10 @@ public class GameHandler : MonoBehaviour {
         GUI.color = Color.black;
         style.fontSize = 30;
 
-        
-        GUI.Label(new Rect(Screen.width / 2 - (LastAction.Length * 15) / 2, Screen.height / 2, 100, 50), LastAction, style);
+        if (Mid)
+        {
+            GUI.Label(new Rect(Screen.width / 2 - (AnzeigeMid.Length * 15) / 2, Screen.height / 2, 100, 50), AnzeigeMid, style);
+        }
 
         // Active Player Visualization
         //GUI.Label(new Rect(Screen.width / 2 - (ActivePlayer.Length * 15) / 2, Screen.height - 50, 100, 50), ActivePlayer, style);
@@ -163,9 +166,12 @@ public class GameHandler : MonoBehaviour {
     // Input muss noch an Controller angepasst werden!
     private void InputListener()
     {
+        // Exit
+        if (Input.GetKeyDown(KeyCode.Escape)) { C.CloseStream(); SceneManager.LoadScene(0); }
+
+        // Game Input
         if (!resettingController && !Replay.replaying)
         {
-            if (Input.GetKeyDown(KeyCode.Escape)) { SceneManager.LoadScene(0); }
             if (C == null)
             {
                 if (Input.GetKeyDown(KeyCode.A)) { LastAction = "Button"; LastPos = -1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
@@ -219,19 +225,20 @@ public class GameHandler : MonoBehaviour {
     // Normal Game Mode
     private IEnumerator Game()
     {
-        LastAction = "Begin";
+        Mid = true;
+        AnzeigeMid = "Begin";
         bool correct = true;
         SequenzCounter = 0;
 
-
-
-        Debug.Log("Sequenz Check...");
-
         
+        Debug.Log("Sequenz Check...");
+               
         // Sequenz wiederholen
         while (correct && SequenzCounter < Sequenz.Count)
         {
             yield return new WaitUntil(() => ActionDone || Hate <= 0 || TimeCurrent > TimeToBeat);
+
+            Mid = false;
 
             Debug.Log("Action has been done!");
 
@@ -296,6 +303,8 @@ public class GameHandler : MonoBehaviour {
         // Korrekte Eingabe wird Überprüft
         if (correct)
         {
+            Mid = true;
+            AnzeigeMid = "Add Action";
             // Element hinzufügen
             yield return new WaitUntil(() => ActionDone || TimeCurrent > TimeToBeat);
             if (TimeCurrent <= TimeToBeat)
@@ -313,6 +322,7 @@ public class GameHandler : MonoBehaviour {
                 Debug.Log("Time is Over!");
                 WrongInput();
             }
+            Mid = false;
         }
 
 
@@ -330,6 +340,11 @@ public class GameHandler : MonoBehaviour {
         // Replay Der Kompletten Sequenz
         Debug.Log("Replay...");
 
+        yield return new WaitForSeconds(1);
+
+        Mid = true;
+        AnzeigeMid = "Replay";
+
         Replay.replaying = true;
 
         yield return new WaitForSeconds(Replay.waitTime + 0.1f);
@@ -343,6 +358,7 @@ public class GameHandler : MonoBehaviour {
 
         ResetEvent.Invoke();
 
+        Mid = false;
 
 
         // Ende des Replays
@@ -389,7 +405,8 @@ public class GameHandler : MonoBehaviour {
 
         resettingController = true;
 
-        LastAction = "Reset Controller";
+        Mid = true;
+        AnzeigeMid = "Reset Controller";
 
         Debug.Log("Resetting Controller");
 
@@ -404,6 +421,8 @@ public class GameHandler : MonoBehaviour {
         s2 = false;
 
         yield return new WaitForSeconds(0.5f);
+
+        Mid = false;
 
         Debug.Log("Controller is ready!");
         resettingController = false;

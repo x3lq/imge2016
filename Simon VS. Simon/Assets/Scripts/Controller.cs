@@ -386,6 +386,11 @@ public class Controller : MonoBehaviour
     }
     */
 
+    public void CloseStream()
+    {
+        stream.Close();
+    }
+
     void OnGui()
     {
         /*

@@ -61,8 +61,6 @@ public class Replay : MonoBehaviour
     {
         Debug.Log("Replay Of Sequenz: " + GameHandler.Sequenz.Count);
 
-        yield return new WaitForSeconds(1);
-
         foreach (ControllerElement var in GameHandler.Sequenz)
         {
             if (var.Type.Equals("Button"))
