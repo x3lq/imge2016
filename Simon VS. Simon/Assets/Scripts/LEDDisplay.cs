@@ -1,0 +1,82 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class LEDDisplay : MonoBehaviour
+{
+    public bool on, off;
+    public Controller c;
+    public GameHandler gameHandler;
+    public ColorChanger[] LedColorChangers;
+    public GameObject[] led;
+
+    
+
+
+    void Start()
+    {
+        int i = 0;
+        foreach (GameObject tmp in led)
+        {
+            LedColorChangers[i] = tmp.GetComponent<ColorChanger>();
+            i++;
+        }    
+    }
+
+
+    
+    //blau rot gelb grün
+    void Update()
+    {
+        if (on)
+        {
+            setLED();
+            on = false;
+        }
+
+        if (off)
+        {
+            off = false;
+            offLED();
+        }
+    }
+
+    public int[] calculateNumber()
+    {
+        int[] res = {0, 0, 0, 0};
+
+        int num = gameHandler.SCount;
+
+        int i = 3;
+        while (i >= 0)
+        {
+            res[i] = num%2;
+            num = num/2;
+            i--;
+        }
+
+        return res;
+    }
+
+    public void setLED()
+    {
+        int[] on = calculateNumber();
+
+        int i = 0;
+        foreach (GameObject tmp in led)
+        {
+            if (on[i] == 1)
+            {
+                tmp.GetComponent<ColorChanger>().toggleColorOn();
+            }
+            c.LED(i, on[i]);
+            i++;
+            
+        }
+    }
+
+    public void offLED()
+    {
+        c.LEDOFF();
+    }
+}
