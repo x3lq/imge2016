@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameHandler : MonoBehaviour {
 
@@ -67,7 +68,7 @@ public class GameHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        //Mode = Modes.Normal;
+        Mode = (Modes)Options.GameMode;
 
         Replay = Controller_Plate.GetComponent<Replay>();
 
@@ -125,27 +126,27 @@ public class GameHandler : MonoBehaviour {
         GUI.Label(new Rect(Screen.width / 2 - (LastAction.Length * 15) / 2, Screen.height / 2, 100, 50), LastAction, style);
 
         // Active Player Visualization
-        GUI.Label(new Rect(Screen.width / 2 - (ActivePlayer.Length * 15) / 2, Screen.height - 50, 100, 50), ActivePlayer, style);
+        //GUI.Label(new Rect(Screen.width / 2 - (ActivePlayer.Length * 15) / 2, Screen.height - 50, 100, 50), ActivePlayer, style);
         if (!TekkenStyle)
         {
             // P1 Points
-            GUI.Label(new Rect(50, Screen.height - 50, 100, 50), "P1: " + P1Score, style);
+            GUI.Label(new Rect(50, Screen.height/2, 100, 50), "P1: " + P1Score, style);
             // P2 Points
-            GUI.Label(new Rect(Screen.width - 130, Screen.height - 50, 100, 50), "P2: " + P2Score, style);
+            GUI.Label(new Rect(Screen.width - 130, Screen.height/2, 100, 50), "P2: " + P2Score, style);
         }
         else
         {
             // P1 Points
-            GUI.Label(new Rect(50, Screen.height - 50, 100, 50), "P1: " + P1Health, style);
+            GUI.Label(new Rect(50, Screen.height/2, 100, 50), "P1: " + P1Health, style);
             // P2 Points
-            GUI.Label(new Rect(Screen.width - 130, Screen.height - 50, 100, 50), "P2: " + P2Health, style);
+            GUI.Label(new Rect(Screen.width - 130, Screen.height/2, 100, 50), "P2: " + P2Health, style);
         }
 
         // Sequenz
-        GUI.Label(new Rect(50, 50, 100, 50), "Fortschritt: " + SequenzCounter + "/" + Sequenz.Count, style);
+        //GUI.Label(new Rect(50, 50, 100, 50), "Fortschritt: " + SequenzCounter + "/" + Sequenz.Count, style);
 
         // Mode
-        GUI.Label(new Rect(Screen.width - Mode.ToString().Length * 15 - 50, 50, 100, 50), Mode.ToString(), style);
+        //GUI.Label(new Rect(Screen.width - Mode.ToString().Length * 15 - 50, 50, 100, 50), Mode.ToString(), style);
 
         // Mode Extras
         if (Mode == Modes.TimeTrial || Mode == Modes.TotalDestruction)
@@ -164,6 +165,7 @@ public class GameHandler : MonoBehaviour {
     {
         if (!resettingController && !Replay.replaying)
         {
+            if (Input.GetKeyDown(KeyCode.Escape)) { SceneManager.LoadScene(0); }
             if (C == null)
             {
                 if (Input.GetKeyDown(KeyCode.A)) { LastAction = "Button"; LastPos = -1; LastID = 0; CoolDown = CoolDownTime; ActionDone = true; }
@@ -218,12 +220,14 @@ public class GameHandler : MonoBehaviour {
     private IEnumerator Game()
     {
         LastAction = "Begin";
-
         bool correct = true;
         SequenzCounter = 0;
 
+
+
         Debug.Log("Sequenz Check...");
 
+        
         // Sequenz wiederholen
         while (correct && SequenzCounter < Sequenz.Count)
         {
@@ -256,10 +260,14 @@ public class GameHandler : MonoBehaviour {
         }
 
         Debug.Log("Sequenz Check Finished!");
+        StartCoroutine(C.Vibrate(1, 0.1f, 0, 500));
+
+
 
         // Hatefest Mode
         Hating = false;
         Hate = HateTime;
+
 
         // TimeTrial Mode
         if (Mode == Modes.TimeTrial)
@@ -276,11 +284,16 @@ public class GameHandler : MonoBehaviour {
             TimeCurrent = 0;
             measureTime = false;
         }
+
+        // Total Destruction
         if(Mode == Modes.TotalDestruction)
         {
             TimeToBeat = TDTime;
         }
 
+
+
+        // Korrekte Eingabe wird Überprüft
         if (correct)
         {
             // Element hinzufügen
@@ -302,6 +315,8 @@ public class GameHandler : MonoBehaviour {
             }
         }
 
+
+        // Total Destruction
         if (Mode == Modes.TotalDestruction)
         {
             Debug.Log("Measured Time...");
@@ -309,6 +324,8 @@ public class GameHandler : MonoBehaviour {
             TimeCurrent = 0;
             measureTime = false;
         }
+
+
 
         // Replay Der Kompletten Sequenz
         Debug.Log("Replay...");
@@ -326,8 +343,9 @@ public class GameHandler : MonoBehaviour {
 
         ResetEvent.Invoke();
 
-        // Ende der Sequenz
 
+
+        // Ende des Replays
         yield return new WaitForSeconds(1);
 
         ActionDone = false;
@@ -338,11 +356,13 @@ public class GameHandler : MonoBehaviour {
 
         StartCoroutine(WaitForControllerReset());
     }
-
+    
     private bool WrongInput()
     {
         // Falsche Eingabe
         Debug.Log("Wrong!");
+        StartCoroutine(C.Vibrate(1, 0.5f, 0, 900));
+
         if (ActivePlayer == "Player 1") { P2Score++; P1Health -= Sequenz.Count - SequenzCounter; }
         else { P1Score++; P2Health -= Sequenz.Count - SequenzCounter; }
         
@@ -356,7 +376,6 @@ public class GameHandler : MonoBehaviour {
     {
         Debug.Log(logMessage);
     }
-
     
     IEnumerator ControllerInit()
     {
@@ -374,15 +393,17 @@ public class GameHandler : MonoBehaviour {
 
         Debug.Log("Resetting Controller");
 
-        yield return new WaitUntil(() => C.slider1 <= 0.25f);
-        yield return new WaitUntil(() => C.slider2 <= 0.25f);
-        yield return new WaitUntil(() => C.knob1 >= 0.75f);
-        yield return new WaitUntil(() => C.knob2 >= 0.75f);
+        yield return new WaitUntil(() => C.slider1 <= 0.25f && C.slider2 <= 0.25f && C.knob1 >= 0.75f && C.knob2 >= 0.75f);
+        //yield return new WaitUntil(() => C.slider2 <= 0.25f);
+        //yield return new WaitUntil(() => C.knob1 >= 0.75f);
+        //yield return new WaitUntil(() => C.knob2 >= 0.75f);
 
         k1 = true;
         k2 = true;
         s1 = false;
         s2 = false;
+
+        yield return new WaitForSeconds(0.5f);
 
         Debug.Log("Controller is ready!");
         resettingController = false;

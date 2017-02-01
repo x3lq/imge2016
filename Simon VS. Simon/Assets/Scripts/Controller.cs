@@ -7,6 +7,9 @@ using System;
 public class Controller : MonoBehaviour
 {
 
+    public bool vibrate;
+    public bool vibrating;
+
     public static Controller c;
     public float time;
 
@@ -111,6 +114,9 @@ public class Controller : MonoBehaviour
         Accellerometer();
         Mic();
 
+        if (vibrate) { StartCoroutine(Vibrate(3, 0.1f, 0.1f, 700));}
+
+        //setMotorSpeed(MotorSpeed);
         //gestureDetection();
 
     }
@@ -278,12 +284,40 @@ public class Controller : MonoBehaviour
 
     public void setMotorSpeed(float Speed)
     {
-        if (Mathf.Abs(MotorSpeed - Speed) >= 25 || Speed == 0)
+        stream.Write("m " + Speed + "\r\n");
+        stream.ReadLine();
+        MotorSpeed = (int)Speed;
+    }
+
+    public IEnumerator Vibrate(int Times, float OnTime, float Gap, int Strength)
+    {
+        vibrate = false;
+
+        if (!vibrating)
         {
-            stream.Write("m " + Speed + "\r\n");
-            stream.ReadLine();
-            MotorSpeed = (int)Speed;
+            vibrating = true;
+
+            Debug.Log("Motor OnTime: " + OnTime);
+
+            for (int i = 0; i < Times; i++)
+            {
+                stream.Write("m " + 800 + "\r\n");
+                stream.ReadLine();
+                MotorSpeed = (int)800;
+
+                yield return new WaitForSeconds(OnTime);
+
+                stream.Write("m " + 0 + "\r\n");
+                stream.ReadLine();
+                MotorSpeed = (int)0;
+
+                yield return new WaitForSeconds(Gap);
+            }
+
+            Debug.Log("Motor Off!");
+
         }
+        vibrating = false;
     }
 
     public void Accellerometer()

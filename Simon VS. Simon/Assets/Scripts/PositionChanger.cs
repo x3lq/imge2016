@@ -5,6 +5,8 @@ using UnityEngine;
 public class PositionChanger : MonoBehaviour
 {
 
+    public static bool moving;
+
     public float speed;
     public GameObject[] pos;
     // public GameObject objectToSlide;
@@ -41,12 +43,19 @@ public class PositionChanger : MonoBehaviour
 
     IEnumerator toPos(int i, bool color)
     {
+        yield return new WaitUntil(() => !moving);
+        moving = true;
+
+        float Lock = 2;
+        
         if(color) gameObject.GetComponent<ColorChanger>().toggleColorOn();
-       while ( Vector3.Distance(transform.position, pos[i].transform.position) > 0.05f)
+        while ( Lock > 0 && Vector3.Distance(transform.position, pos[i].transform.position) > 0.05f)
         //while(objectToSlide.transform.position.y != pos[i].transform.position.y)
         {
+            Debug.Log("Changing Position to " + i);
             transform.position = Vector3.Lerp(transform.position, pos[i].transform.position, Time.deltaTime*speed);
-           //objectToSlide.transform.position = transform.position + Vector3.forward;
+            //objectToSlide.transform.position = transform.position + Vector3.forward;
+            Lock -= Time.deltaTime;
             yield return null;
         }
         //Vector3.Lerp(transform.position, pos[i].transform.position, Time.deltaTime*speed);
@@ -54,5 +63,7 @@ public class PositionChanger : MonoBehaviour
         transform.position = pos[i].transform.position;
         //yield return null;
         gameObject.GetComponent<ColorChanger>().toggleColorOff();
+
+        moving = false;
     }
 }
